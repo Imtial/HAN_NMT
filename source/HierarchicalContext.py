@@ -52,7 +52,7 @@ class HierarchicalContext(nn.Module):
          head_count=8, hidden_size=2048, 
          context_size=3, padding_idx=1):
     super(HierarchicalContext, self).__init__()
-    
+    print("HC inititalized...")
     self.context_size = context_size
     self.padding_idx = padding_idx
 
@@ -267,7 +267,7 @@ class HierarchicalContext(nn.Module):
   """
 
   def forward(self, input, query, context, doc_index, batch_i=None):
-
+    print("HC forward running...")
     input = input[:, :, 0].transpose(0,1).contiguous() 
     query = query.transpose(0,1).contiguous()
     context = context.transpose(0,1).contiguous()
