@@ -305,6 +305,8 @@ class Trainer(object):
       self.model.zero_grad()
 
     for batch, doc_index in true_batchs:
+      print(f"batch: {batch}")
+      print(f"doc_index: {doc_index}")
       target_size = batch.tgt.size(0)
       # Truncated BPTT
       if self.trunc_size:
