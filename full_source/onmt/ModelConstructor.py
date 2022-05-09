@@ -216,6 +216,7 @@ def make_base_model(model_opt, fields, gpu, checkpoint=None, train_part="all"):
     tgt_embeddings.word_lut.weight = src_embeddings.word_lut.weight
 
   decoder = make_decoder(model_opt, tgt_embeddings)
+  print("making context...")
   context = make_context(model_opt, tgt_dict)
 
   # Make NMTModel(= encoder + decoder).
