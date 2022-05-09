@@ -145,6 +145,7 @@ def make_context(opt, tgt_dict):
   if opt.context_type == "HAN_join":
     return nn.ModuleList([HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok), HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok)])
   else:
+    print("returning hc...")
     return HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type, 
             context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok)
 
@@ -216,7 +217,6 @@ def make_base_model(model_opt, fields, gpu, checkpoint=None, train_part="all"):
     tgt_embeddings.word_lut.weight = src_embeddings.word_lut.weight
 
   decoder = make_decoder(model_opt, tgt_embeddings)
-  print("making context...")
   context = make_context(model_opt, tgt_dict)
 
   # Make NMTModel(= encoder + decoder).
