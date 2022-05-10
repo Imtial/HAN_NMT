@@ -186,8 +186,7 @@ class HierarchicalContext(nn.Module):
     context_word, attn_word = self.word_attn(context_word, context_word,
                     query_word_norm, mask=context_word_mask, all_attn=True)
 
-
-    print(f"context_word: {context_word.size()}")
+    print(f"context_word: {context_word.size()}, attn_word: {attn_word.siz()}")
     # word_context = context_word.view(b_size, t_size, d_size)
     # _, h, _, c = attn_word.size()
     # attn_word = attn_word.view(b_size, t_size, h, 1, c)
@@ -201,13 +200,13 @@ class HierarchicalContext(nn.Module):
 
     # Norm layer 
     context_sent = self.layer_norm_word(context_word)
-
+    print(f"1. context_sent: {context_sent.size()}")
     # Re-arrange the tensors for matching sentences
     query_sent_norm, context_sent, context_sent_mask, attn_word = self._get_sent_context(query_sent_norm, context_sent, index, attn_word)
-
+    print(f"2. context_sent: {context_sent.size()}, attn_word: {attn_word.size()}")
     # Attention over sentences
     sent_context, attn_sent = self.sent_attn(context_sent, context_sent, query_sent_norm, mask=context_sent_mask, all_attn=True)  
-    print(f"sent_context: {sent_context.size()}")
+    print(f"3. sent_context: {sent_context.size()}, attn_sent: {attn_sent.size()}")
     sent_context = sent_context.view(b_size, t_size, d_size)
     _, h, _, c = attn_sent.size()
     attn_sent = attn_sent.view(b_size, t_size, h, 1, c)
