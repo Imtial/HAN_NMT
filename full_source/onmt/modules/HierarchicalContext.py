@@ -187,14 +187,17 @@ class HierarchicalContext(nn.Module):
                     query_word_norm, mask=context_word_mask, all_attn=True)
 
 
-    word_context = context_word.view(b_size, t_size, d_size)
-    _, h, _, c = attn_word.size()
-    attn_word = attn_word.view(b_size, t_size, h, 1, c)
-    word_context = self.feed_forward(word_context)
+    print(f"context_word: {context_word.size()}")
+    # word_context = context_word.view(b_size, t_size, d_size)
+    # _, h, _, c = attn_word.size()
+    # attn_word = attn_word.view(b_size, t_size, h, 1, c)
+    # word_context = self.feed_forward(word_context)
 
-    l = self.sigmoid(self.linear(torch.cat([query, word_context], dim=2)))
-    out = (1-l)*query + l*word_context
-    return out.transpose(0,1).contiguous(), attn_word, attn_word
+    # l = self.sigmoid(self.linear(torch.cat([query, word_context], dim=2)))
+    # out = (1-l)*query + l*word_context
+    # return out.transpose(0,1).contiguous(), attn_word, attn_word
+
+
 
     # Norm layer 
     context_sent = self.layer_norm_word(context_word)
@@ -204,7 +207,7 @@ class HierarchicalContext(nn.Module):
 
     # Attention over sentences
     sent_context, attn_sent = self.sent_attn(context_sent, context_sent, query_sent_norm, mask=context_sent_mask, all_attn=True)  
-    
+    print(f"sent_context: {sent_context.size()}")
     sent_context = sent_context.view(b_size, t_size, d_size)
     _, h, _, c = attn_sent.size()
     attn_sent = attn_sent.view(b_size, t_size, h, 1, c)
