@@ -618,7 +618,9 @@ class NMTModel(nn.Module):
       if self.context_type == "HAN_join":
         memory_bank, attn_word_enc, attn_sent_enc = self.doc_context[0](src, memory_bank, memory_bank, context_index)
       elif self.context_type == "HAN_enc" or self.context_type == "HAN_dec_source":
-        memory_bank, attn_word_enc, attn_sent_enc = self.doc_context(src, memory_bank, memory_bank, context_index, batch_i=batch_i)
+        # memory_bank, attn_word_enc, attn_sent_enc = self.doc_context(src, memory_bank, memory_bank, context_index, batch_i=batch_i)
+        memory_bank, attn_word_enc, attn_sent_enc = self.doc_context[0](src, memory_bank, memory_bank, context_index, batch_i=batch_i)
+        memory_bank, attn_word_enc, attn_sent_enc = self.doc_context[1](src, memory_bank, memory_bank, context_index, batch_i=batch_i)
 
     enc_state = \
       self.decoder.init_decoder_state(src, memory_bank, enc_final)

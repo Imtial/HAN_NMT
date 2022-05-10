@@ -145,6 +145,7 @@ def make_context(opt, tgt_dict):
   if opt.context_type == "HAN_join":
     return nn.ModuleList([HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok), HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok)])
   else:
+    return nn.ModuleList([HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok), HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type,context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok)])
     return HierarchicalContext(opt.rnn_size, opt.dropout, context_type=opt.context_type, 
             context_size=opt.context_size, padding_idx=padding_idx, tok_idx=tok)
 
