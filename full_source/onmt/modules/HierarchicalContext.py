@@ -170,6 +170,8 @@ class HierarchicalContext(nn.Module):
 
     b_size, t_size, d_size = query.size()
     b_size_, k_size, d_size = context.size()
+    print(f"query: {query.size()}")
+    print(f"context: {context.size()}")
 
     query_ = Variable(query.data)
     context = Variable(context.data)
