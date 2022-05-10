@@ -186,7 +186,7 @@ class HierarchicalContext(nn.Module):
     context_word, attn_word = self.word_attn(context_word, context_word,
                     query_word_norm, mask=context_word_mask, all_attn=True)
 
-    print(f"context_word: {context_word.size()}, attn_word: {attn_word.siz()}")
+    print(f"context_word: {context_word.size()}, attn_word: {attn_word.size()}")
     # word_context = context_word.view(b_size, t_size, d_size)
     # _, h, _, c = attn_word.size()
     # attn_word = attn_word.view(b_size, t_size, h, 1, c)
