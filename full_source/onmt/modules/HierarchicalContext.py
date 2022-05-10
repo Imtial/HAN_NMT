@@ -185,16 +185,25 @@ class HierarchicalContext(nn.Module):
     # Attention over words
     context_word, attn_word = self.word_attn(context_word, context_word,
                     query_word_norm, mask=context_word_mask, all_attn=True)
+
+
+    word_context = context_word.view(b_size, t_size, d_size)
+    _, h, _, c = attn_word.size()
+    attn_word = attn_word.view(b_size, t_size, h, 1, c)
+    word_context = self.feed_forward(word_context)
+
+    l = self.sigmoid(self.linear(torch.cat([query, word_context], dim=2)))
+    out = (1-l)*query + l*word_context
+    return out.transpose(0,1).contiguous(), attn_word, attn_word
+
     # Norm layer 
     context_sent = self.layer_norm_word(context_word)
 
     # Re-arrange the tensors for matching sentences
-    query_sent_norm, context_sent, context_sent_mask, attn_word = self._get_sent_context(query_sent_norm, 
-                                context_sent, index, attn_word)
+    query_sent_norm, context_sent, context_sent_mask, attn_word = self._get_sent_context(query_sent_norm, context_sent, index, attn_word)
 
     # Attention over sentences
-    sent_context, attn_sent = self.sent_attn(context_sent, context_sent, query_sent_norm,
-                    mask=context_sent_mask, all_attn=True)  
+    sent_context, attn_sent = self.sent_attn(context_sent, context_sent, query_sent_norm, mask=context_sent_mask, all_attn=True)  
     
     sent_context = sent_context.view(b_size, t_size, d_size)
     _, h, _, c = attn_sent.size()
