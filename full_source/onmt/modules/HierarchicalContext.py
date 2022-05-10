@@ -163,6 +163,9 @@ class HierarchicalContext(nn.Module):
 
     in_batch, in_len = input.size() 
     in_pad_mask = input.data.eq(self.padding_idx)
+
+    in_pad_mask = (torch.randn(input.size()) > 0.2).bitwise_and(in_pad_mask) 
+
     for k in self.tok_idx:
       in_pad_mask = in_pad_mask|input.data.eq(k)
 
@@ -170,8 +173,6 @@ class HierarchicalContext(nn.Module):
 
     b_size, t_size, d_size = query.size()
     b_size_, k_size, d_size = context.size()
-    print(f"query: {query.size()}")
-    print(f"context: {context.size()}")
 
     query_ = Variable(query.data)
     context = Variable(context.data)
@@ -188,7 +189,6 @@ class HierarchicalContext(nn.Module):
     context_word, attn_word = self.word_attn(context_word, context_word,
                     query_word_norm, mask=context_word_mask, all_attn=True)
 
-    print(f"context_word: {context_word.size()}, attn_word: {attn_word.size()}")
     # word_context = context_word.view(b_size, t_size, d_size)
     # _, h, _, c = attn_word.size()
     # attn_word = attn_word.view(b_size, t_size, h, 1, c)
@@ -202,18 +202,18 @@ class HierarchicalContext(nn.Module):
 
     # Norm layer 
     context_sent = self.layer_norm_word(context_word)
-    print(f"1. context_sent: {context_sent.size()}")
+    
     # Re-arrange the tensors for matching sentences
     query_sent_norm, context_sent, context_sent_mask, attn_word = self._get_sent_context(query_sent_norm, context_sent, index, attn_word)
-    print(f"2. context_sent: {context_sent.size()}, attn_word: {attn_word.size()}")
+
     # Attention over sentences
     sent_context, attn_sent = self.sent_attn(context_sent, context_sent, query_sent_norm, mask=context_sent_mask, all_attn=True)  
-    print(f"3. sent_context: {sent_context.size()}, attn_sent: {attn_sent.size()}")
+
     sent_context = sent_context.view(b_size, t_size, d_size)
     _, h, _, c = attn_sent.size()
     attn_sent = attn_sent.view(b_size, t_size, h, 1, c)
     sent_context = self.feed_forward(sent_context)
-    print(f"ff_sent_context: {sent_context.size()}")
+
     l = self.sigmoid(self.linear(torch.cat([query, sent_context], dim=2)))
     out = (1-l)*query + l*sent_context
 
