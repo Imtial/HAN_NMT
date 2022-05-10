@@ -213,7 +213,7 @@ class HierarchicalContext(nn.Module):
     _, h, _, c = attn_sent.size()
     attn_sent = attn_sent.view(b_size, t_size, h, 1, c)
     sent_context = self.feed_forward(sent_context)
-
+    print(f"ff_sent_context: {sent_context.size()}")
     l = self.sigmoid(self.linear(torch.cat([query, sent_context], dim=2)))
     out = (1-l)*query + l*sent_context
 
