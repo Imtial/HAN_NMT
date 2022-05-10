@@ -644,7 +644,8 @@ class NMTModel(nn.Module):
         else: 
           ctxt = decoder_outputs
           inp = tgt
-        decoder_outputs, attn_word_dec, attn_sent_dec = self.doc_context(inp, query, ctxt, context_index, batch_i=batch_i)
+        decoder_outputs, attn_word_dec, attn_sent_dec = self.doc_context[0](inp, query, ctxt, context_index, batch_i=batch_i)
+        decoder_outputs, attn_word_dec, attn_sent_dec = self.doc_context[1](inp, query, ctxt, context_index, batch_i=batch_i)
 
     if self.multigpu:
       # Not yet supported on multi-gpu
