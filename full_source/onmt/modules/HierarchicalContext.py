@@ -164,7 +164,7 @@ class HierarchicalContext(nn.Module):
     in_batch, in_len = input.size() 
     in_pad_mask = input.data.eq(self.padding_idx)
 
-    in_pad_mask = (torch.randn(input.size()) > 0.2).bitwise_and(in_pad_mask) 
+    in_pad_mask = (torch.randn(input.size()).to(in_pad_mask.device) > 0.2).bitwise_and(in_pad_mask) 
 
     for k in self.tok_idx:
       in_pad_mask = in_pad_mask|input.data.eq(k)
